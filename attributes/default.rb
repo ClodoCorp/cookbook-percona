@@ -22,6 +22,7 @@
 # Always restart percona on configuration changes
 default["percona"]["auto_restart"] = true
 default["percona"]["server"]["replication"]["force_start"] = true
+default["percona"]["server"]["configure"] = true
 
 case node["platform_family"]
 when "debian"

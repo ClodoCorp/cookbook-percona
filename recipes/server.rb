@@ -24,7 +24,9 @@ end
 
 include_recipe "percona::configure_server"
 
-# access grants
-include_recipe "percona::access_grants"
+if node["percona"]["server"]["configure"] 
+  # access grants
+  include_recipe "percona::access_grants"
 
-include_recipe "percona::replication"
+  include_recipe "percona::replication"
+end
