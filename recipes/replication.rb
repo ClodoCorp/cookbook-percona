@@ -2,7 +2,6 @@
 mysql = %Q(mysql -p"#{node['percona']['server']['root_password']}" -e)
 
 if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["server"]["role"] == "master"
-  if node["percona"]["server"]["role"] == "master"
     # Grant replication for a slave user.
     execute <<-SQL
     #{mysql} "
@@ -26,7 +25,7 @@ if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["se
     SQL
     
     execute %Q(#{mysql} "FLUSH PRIVILEGES;")
-
+  if node["percona"]["server"]["role"] == "master" && node["percona"]["server"]["replication"]["force_start"] == true
     # Ensure this is not running as a slave, useful for master promotion
     execute %Q(#{mysql} "STOP SLAVE;")
     execute %Q(#{mysql} "RESET SLAVE;")
@@ -54,8 +53,9 @@ if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["se
       SQL
       returns [0, 1] # in case password is already set
     end
-
-    # Start slave automatically
-    execute %Q(#{mysql} "START SLAVE;")
+    if node["percona"]["server"]["force_start"] == true
+      # Start slave automatically
+      execute %Q(#{mysql} "START SLAVE;")
+    end
   end
 end
