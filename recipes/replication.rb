@@ -53,7 +53,7 @@ if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["se
       SQL
       returns [0, 1] # in case password is already set
     end
-    if node["percona"]["server"]["force_start"] == true
+    if node["percona"]["server"]["replication"]["force_start"] == true
       # Start slave automatically
       execute %Q(#{mysql} "START SLAVE;")
     end
