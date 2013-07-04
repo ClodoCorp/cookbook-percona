@@ -39,7 +39,8 @@ end
 # create users and grant privileges
 if node['percona']['server'].has_key? 'users'
   # fetch user passwords out of encrypted data bag
-  passwords = Chef::EncryptedDataBagItem.load('passwords', 'mysql')
+  # passwords = Chef::EncryptedDataBagItem.load('passwords', 'mysql')
+  passwords = Hash.new
 
   node['percona']['server']['users'].each do |user, h|
     password = h['password'] || passwords[user]

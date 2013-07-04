@@ -41,8 +41,11 @@ default["percona"]["keyserver"]                                 = "keys.gnupg.ne
 default["percona"]["encrypted_data_bag"]                        = node["percona"]["encrypted_data_bag"] || "passwords"
 
 # optionally pull default passwords from the encrypted data bags
-encrypted_mysql_passwords = Chef::EncryptedDataBagItem.load(default["percona"]["encrypted_data_bag"], 'mysql')
-encrypted_system_passwords = Chef::EncryptedDataBagItem.load(default["percona"]["encrypted_data_bag"], 'system')
+#encrypted_mysql_passwords = Chef::EncryptedDataBagItem.load(default["percona"]["encrypted_data_bag"], 'mysql')
+#encrypted_system_passwords = Chef::EncryptedDataBagItem.load(default["percona"]["encrypted_data_bag"], 'system')
+
+encrypted_mysql_passwords = Hash.new
+encrypted_system_passwords = Hash.new
 
 # used to generate secure_password in the event no default is provided
 ::Chef::Node.send(:include, Opscode::OpenSSL::Password)
@@ -68,12 +71,12 @@ default["percona"]["server"]["skip_external_locking"]           = true
 default["percona"]["server"]["net_read_timeout"]                = 120
 default["percona"]["server"]["old_passwords"]                   = 1
 default["percona"]["server"]["bind_address"]                    = "127.0.0.1"
-unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("debian_password")
-  default["percona"]["server"]["debian_password"]               = encrypted_system_passwords[default["percona"]["server"]["debian_username"]] || secure_password
-end
-unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("root_password")
-  default["percona"]["server"]["root_password"]                 = encrypted_mysql_passwords["root"] || secure_password
-end
+# unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("debian_password")
+#   default["percona"]["server"]["debian_password"]               = encrypted_system_passwords[default["percona"]["server"]["debian_password"]] || secure_password
+# end
+# unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("root_password")
+#   default["percona"]["server"]["root_password"]                 = encrypted_mysql_passwords["root"] || secure_password
+# end
 
 # Fine Tuning
 default["percona"]["server"]["key_buffer"]                      = "16M"
@@ -141,19 +144,20 @@ default["percona"]["server"]["innodb_lock_wait_timeout"]        = 120
 # Replication Settings
 default["percona"]["server"]["replication"]["read_only"]        = false
 default["percona"]["server"]["replication"]["host"]             = ""
-default["percona"]["server"]["replication"]["username"]         = ""
-unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("replication") && node["percona"]["server"]["replication"].has_key?("password")
-  default["percona"]["server"]["replication"]["password"]       = encrypted_mysql_passwords['replication'] || secure_password
-end
+default["percona"]["server"]["replication"]["username"]         = "repl_user"
+default["percona"]["server"]["replication"]["testuser"]         = "test_user"
+# unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("replication") && node["percona"]["server"]["replication"].has_key?("password")
+#   default["percona"]["server"]["replication"]["password"]       = encrypted_mysql_passwords['replication'] || secure_password
+# end
 default["percona"]["server"]["replication"]["port"]             = 3306
 default["percona"]["server"]["replication"]["ignore_db"]        = ""
 
 # XtraBackup Settings
 default["percona"]["backup"]["configure"]                       = false
 default["percona"]["backup"]["username"]                        = "backup"
-unless node.has_key?("percona") && node["percona"].has_key?("backup") && node["percona"]["backup"].has_key?("password")
-  default["percona"]["backup"]["password"]                      = encrypted_mysql_passwords['backup'] || secure_password
-end
+# unless node.has_key?("percona") && node["percona"].has_key?("backup") && node["percona"]["backup"].has_key?("password")
+#   default["percona"]["backup"]["password"]                      = encrypted_mysql_passwords['backup'] || secure_password
+# end
 
 # XtraDB Cluster Settings
 default["percona"]["cluster"]["binlog_format"]                  = "ROW"
