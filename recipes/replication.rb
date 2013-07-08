@@ -33,18 +33,6 @@ if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["se
 
   if node["percona"]["server"]["role"] == "slave"
 
-    # Set replication parameters
-    execute "Update Master settings" do
-      command <<-SQL
-        #{mysql} "
-        CHANGE MASTER TO
-        MASTER_HOST='#{node["percona"]["server"]["replication"]["host"]}',
-        MASTER_PORT=#{node["percona"]["server"]["replication"]["port"]},
-        MASTER_USER='#{node["percona"]["server"]["replication"]["username"]}';"
-      SQL
-      returns [0, 1] # FIXME: Must check and stop slave before changing!
-    end
-
     execute "Update Master password" do
       command <<-SQL
       #{mysql} "
@@ -53,7 +41,20 @@ if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["se
       SQL
       returns [0, 1] # in case password is already set
     end
+
     if node["percona"]["server"]["replication"]["force_start"] == true
+      # Set replication parameters
+      execute "Update Master settings" do
+        command <<-SQL
+        #{mysql} "
+        CHANGE MASTER TO
+          MASTER_HOST='#{node["percona"]["server"]["replication"]["host"]}',
+          MASTER_PORT=#{node["percona"]["server"]["replication"]["port"]},
+          MASTER_USER='#{node["percona"]["server"]["replication"]["username"]}';"
+        SQL
+        returns [0, 1] # FIXME: Must check and stop slave before changing!
+      end
+
       # Start slave automatically
       execute %Q(#{mysql} "START SLAVE;")
     end
