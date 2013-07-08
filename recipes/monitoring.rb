@@ -19,23 +19,32 @@
 percona_plugins_tarball = "percona-monitoring-plugins-#{node['percona']['plugins_version']}.tar.gz"
 percona_plugins_url = "#{node['percona']['plugins_url']}/#{percona_plugins_tarball}"
 
-directory "percona_plugins_dir" do
-  path node['percona']['plugins_path']
-  owner "root"
-  group "root"
-  mode 0755
-end
+case node["platform_family"]
+when "debian"
+  package "percona-nagios-plugins"
+when "rhel"
+  package "percona-nagios-plugins"
+else
 
-execute "percona-extract-plugins" do
-  command "tar zxf #{Chef::Config[:file_cache_path]}/#{percona_plugins_tarball} --strip-components 2 -C #{node['percona']['plugins_path']}"
-  creates "#{node['percona']['plugins_path']}/COPYING"
-  only_if do File.exist?("#{Chef::Config[:file_cache_path]}/#{percona_plugins_tarball}") end
-  action :run
-end
+  directory "percona_plugins_dir" do
+    path node['percona']['plugins_path']
+    owner "root"
+    group "root"
+    mode 0755
+  end
 
-remote_file "#{Chef::Config[:file_cache_path]}/#{percona_plugins_tarball}" do
-  source percona_plugins_url
-  mode 0644
-  checksum node['percona']['plugins_sha']
-  notifies :run, "execute[percona-extract-plugins]", :immediately
+  execute "percona-extract-plugins" do
+    command "tar zxf #{Chef::Config[:file_cache_path]}/#{percona_plugins_tarball} --strip-components 2 -C #{node['percona']['plugins_path']}"
+    creates "#{node['percona']['plugins_path']}/COPYING"
+    only_if do File.exist?("#{Chef::Config[:file_cache_path]}/#{percona_plugins_tarball}") end
+    action :run
+  end
+
+  remote_file "#{Chef::Config[:file_cache_path]}/#{percona_plugins_tarball}" do
+    source percona_plugins_url
+    mode 0644
+    checksum node['percona']['plugins_sha']
+    notifies :run, "execute[percona-extract-plugins]", :immediately
+  end
+
 end
