@@ -20,6 +20,9 @@
 [client]
 port   = <%= node["percona"]["server"]["port"] %>
 socket = <%= node["percona"]["server"]["socket"] %>
+<% node["percona"]["add_conf"]["client"].keys.each do |key| %>
+  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 
 # Here is entries for some specific programs
 # The following values assume you have at least 32M ram
@@ -29,6 +32,9 @@ socket = <%= node["percona"]["server"]["socket"] %>
 socket           = <%= node["percona"]["server"]["socket"] %>
 nice             = <%= node["percona"]["server"]["nice"] %>
 open-files-limit = <%= node["percona"]["server"]["open_files_limit"] %>
+<% node["percona"]["add_conf"]["mysqld_safe"].keys.each do |key| %>
+  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 
 [mysqld]
 #
@@ -139,19 +145,29 @@ max_binlog_size  = <%= node["percona"]["server"]["max_binlog_size"] %>
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
 # ssl-key=/etc/mysql/server-key.pem
-
-
+<% node["percona"]["add_conf"]["mysqld"].keys.each do |key| %>
+  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 
 [mysqldump]
 quick
 quote-names
 max_allowed_packet = <%= node["percona"]["server"]["max_allowed_packet"] %>
+<% node["percona"]["add_conf"]["mysqldump"].keys.each do |key| %>
+  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 
 [mysql]
 #no-auto-rehash # faster start of mysql but no tab completition
+<% node["percona"]["add_conf"]["mysql"].keys.each do |key| %>
+  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 
 [isamchk]
 key_buffer = <%= node["percona"]["server"]["key_buffer"] %>
+<% node["percona"]["add_conf"]["isamchk"].keys.each do |key| %>
+  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 
 #
 # * IMPORTANT: Additional settings that can override those from this file!
