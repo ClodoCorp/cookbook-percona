@@ -20,8 +20,10 @@
 [client]
 port   = <%= node["percona"]["server"]["port"] %>
 socket = <%= node["percona"]["server"]["socket"] %>
+<% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("client")%>
 <% node["percona"]["add_conf"]["client"].keys.each do |key| %>
   <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 <% end %>
 
 # Here is entries for some specific programs
@@ -32,8 +34,10 @@ socket = <%= node["percona"]["server"]["socket"] %>
 socket           = <%= node["percona"]["server"]["socket"] %>
 nice             = <%= node["percona"]["server"]["nice"] %>
 open-files-limit = <%= node["percona"]["server"]["open_files_limit"] %>
+<% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqld_safe")%>
 <% node["percona"]["add_conf"]["mysqld_safe"].keys.each do |key| %>
   <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 <% end %>
 
 [mysqld]
@@ -159,28 +163,36 @@ max_binlog_size  = <%= node["percona"]["server"]["max_binlog_size"] %>
 # ssl-ca=/etc/mysql/cacert.pem
 # ssl-cert=/etc/mysql/server-cert.pem
 # ssl-key=/etc/mysql/server-key.pem
+<% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqld")%>
 <% node["percona"]["add_conf"]["mysqld"].keys.each do |key| %>
   <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 <% end %>
 
 [mysqldump]
 quick
 quote-names
 max_allowed_packet = <%= node["percona"]["server"]["max_allowed_packet"] %>
+<% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqldump")%>
 <% node["percona"]["add_conf"]["mysqldump"].keys.each do |key| %>
   <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 <% end %>
 
 [mysql]
 #no-auto-rehash # faster start of mysql but no tab completition
+<% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysql")%>
 <% node["percona"]["add_conf"]["mysql"].keys.each do |key| %>
   <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 <% end %>
 
 [isamchk]
 key_buffer = <%= node["percona"]["server"]["key_buffer"] %>
+<% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("isamchk")%>
 <% node["percona"]["add_conf"]["isamchk"].keys.each do |key| %>
   <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+<% end %>
 <% end %>
 
 #
