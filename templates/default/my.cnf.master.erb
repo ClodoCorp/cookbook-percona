@@ -21,7 +21,7 @@ port   = <%= node["percona"]["server"]["port"] %>
 socket = <%= node["percona"]["server"]["socket"] %>
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("client")%>
 <% node["percona"]["add_conf"]["client"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["client"][key]}" %>
 <% end %>
 <% end %>
 
@@ -32,7 +32,7 @@ socket = <%= node["percona"]["server"]["socket"] %>
 interactive-timeout
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqlhotcopy")%>
 <% node["percona"]["add_conf"]["mysqlhotcopy"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["mysqlhotcopy"][key]}" %>
 <% end %>
 <% end %>
 
@@ -43,7 +43,7 @@ nice             = <%= node["percona"]["server"]["nice"] %>
 open-files-limit = <%= node["percona"]["server"]["open_files_limit"] %>
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqld_safe")%>
 <% node["percona"]["add_conf"]["mysqld_safe"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["mysqld_safe"][key]}" %>
 <% end %>
 <% end %>
 
@@ -501,7 +501,7 @@ innodb_open_files=2000
 # ssl-key=/etc/mysql/server-key.pem
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqld")%>
 <% node["percona"]["add_conf"]["mysqld"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["mysqld"][key]}" %>
 <% end %>
 <% end %>
 
@@ -511,7 +511,7 @@ quote-names
 max_allowed_packet = <%= node["percona"]["server"]["max_allowed_packet"] %>
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysqldump")%>
 <% node["percona"]["add_conf"]["mysqldump"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["mysqldump"][key]}" %>
 <% end %>
 <% end %>
 
@@ -519,7 +519,7 @@ max_allowed_packet = <%= node["percona"]["server"]["max_allowed_packet"] %>
 #no-auto-rehash # faster start of mysql but no tab completition
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("mysql")%>
 <% node["percona"]["add_conf"]["mysql"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["mysql"][key]}" %>
 <% end %>
 <% end %>
 
@@ -527,7 +527,7 @@ max_allowed_packet = <%= node["percona"]["server"]["max_allowed_packet"] %>
 key_buffer = <%= node["percona"]["server"]["key_buffer"] %>
 <% if node["percona"].has_key?("add_conf") && node["percona"]["add_conf"].has_key?("isamchk")%>
 <% node["percona"]["add_conf"]["isamchk"].keys.each do |key| %>
-  <%= "#{key} = #{node["percona"]["conf"][category][key]}" %>
+  <%= "#{key} = #{node["percona"]["add_conf"]["isamchk"][key]}" %>
 <% end %>
 <% end %>
 
