@@ -43,8 +43,9 @@ if node['percona']['server'].has_key? 'users'
   passwords = Hash.new
 
   node['percona']['server']['users'].each do |user, h|
-    password = h['password'] || passwords[user]
+    user, host = user.split('@').map{|s| s.gsub("'",'')} if user =~ /@/
     host = h['host'] || '%'
+    password = h['password'] || passwords[user]
     if password
       # mysql GRANT will create the user if it doesn't exist
       # usage is actually a no-op
