@@ -5,7 +5,7 @@ execute %Q(mysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('#{node["per
 end
 
 # macro to execute mysql statements via CLI
-mysql = %Q(mysql -p"#{node["percona"]["server"]["root_password"]}" -e)
+mysql = %Q(mysql -p'#{node["percona"]["server"]["root_password"]}' -e)
 
 # delete non-local root users
 execute %Q(#{mysql} "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');")

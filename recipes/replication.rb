@@ -1,5 +1,5 @@
 # macro to execute mysql statements via CLI
-mysql = %Q(mysql -p"#{node['percona']['server']['root_password']}" -e)
+mysql = %Q(mysql -p'#{node['percona']['server']['root_password']}' -e)
 
 if node["percona"]["server"]["replication"]["host"] != "" || node["percona"]["server"]["role"] == "master"
     # Grant replication for a slave user.
