@@ -3,9 +3,10 @@ include_recipe "percona::package_repo"
 # install packages
 case node["platform_family"]
 when "debian"
-  package "percona-server-server" do
+  package "percona-server-server-5.6" do
     action :install
     options "--force-yes"
+    notifies :stop, "service[mysql]", :immediately
   end
 when "rhel"
   # Need to remove this to avoid conflicts
@@ -29,4 +30,11 @@ if node["percona"]["server"]["configure"]
   include_recipe "percona::access_grants"
 
   include_recipe "percona::replication"
+end
+
+ruby_block 'stop_mysql_after_configure' do
+  block do
+  end
+
+  notifies :stop, "service[mysql]", :immediately
 end

@@ -26,6 +26,14 @@ service "mysql" do
   action server["enable"] ? :enable : :disable
 end
 
+# clean up mysql after initial run
+bash "cleanup_mysql" do
+  code <<-EOC
+    rm -rf #{datadir}/*
+  EOC
+  notifies :stop, "service[mysql]", :immediately
+end
+
 # this is where we dump sql templates for replication, etc.
 directory "/etc/mysql" do
   owner "root"
@@ -48,12 +56,6 @@ directory tmpdir do
   action :create
 end
 
-# install db to the data directory
-execute "setup mysql datadir" do
-  command "mysql_install_db --user=#{user} --datadir=#{datadir}"
-  not_if "test -f #{datadir}/mysql/user.frm"
-end
-
 # setup the main server config file
 template percona["main_config_file"] do
   source "my.cnf.#{conf ? "custom" : server["role"]}.erb"
@@ -73,4 +75,11 @@ template "/etc/mysql/debian.cnf" do
   notifies :restart, "service[mysql]", :immediately if node["percona"]["auto_restart"]
 
   only_if { node["platform_family"] == "debian" }
+end
+
+# install db to the data directory
+execute "setup mysql datadir" do
+  command "mysql_install_db --user=#{user} --datadir=#{datadir}"
+  notifies :start, "service[mysql]", :immediately
+  not_if "test -f #{datadir}/mysql/user.frm"
 end
