@@ -31,6 +31,7 @@ bash "cleanup_mysql" do
   code <<-EOC
     rm -rf #{datadir}/*
   EOC
+  action :nothing
   notifies :stop, "service[mysql]", :immediately
 end
 

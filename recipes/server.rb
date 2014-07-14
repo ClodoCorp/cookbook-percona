@@ -7,6 +7,7 @@ when "debian"
     action :install
     options "--force-yes"
     notifies :stop, "service[mysql]", :immediately
+    notifies :run, "bash[cleanup_mysql]", :immediately
   end
 when "rhel"
   # Need to remove this to avoid conflicts
