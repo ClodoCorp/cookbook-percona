@@ -1,5 +1,7 @@
 include_recipe "percona::package_repo"
 
+isReinstalled = false
+
 # install packages
 case node["platform_family"]
 when "debian"
@@ -8,6 +10,7 @@ when "debian"
     options "--force-yes"
     notifies :stop, "service[mysql]", :immediately
     notifies :run, "bash[cleanup_mysql]", :immediately
+    notifies :create, "ruby_block[set_isReinstalled]", :immediately
   end
 when "rhel"
   # Need to remove this to avoid conflicts
@@ -33,9 +36,18 @@ if node["percona"]["server"]["configure"]
   include_recipe "percona::replication"
 end
 
-ruby_block 'stop_mysql_after_configure' do
+ruby_block 'set_isReinstalled' do
+  block do
+    isReinstalled = true
+  end
+  action :nothing
+end
+
+r = ruby_block 'stop_mysql_after_configure' do
   block do
   end
-
   notifies :stop, "service[mysql]", :immediately
+  action :nothing
 end
+
+r.run_action(:create) if isReinstalled

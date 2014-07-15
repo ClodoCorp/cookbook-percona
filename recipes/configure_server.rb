@@ -82,5 +82,6 @@ end
 execute "setup mysql datadir" do
   command "mysql_install_db --user=#{user} --datadir=#{datadir}"
   notifies :start, "service[mysql]", :immediately
+  notifies :create, "ruby_block[set_isReinstalled]", :immediately
   not_if "test -f #{datadir}/mysql/user.frm"
 end
