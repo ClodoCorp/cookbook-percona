@@ -109,6 +109,7 @@ default["percona"]["server"]["slow_query_log_file"]             = "/var/log/mysq
 default["percona"]["server"]["long_query_time"]                 = 2
 default["percona"]["server"]["server_id"]                       = 1
 default["percona"]["server"]["binlog_do_db"]                    = []
+default["percona"]["server"]["binlog_ignore_db"]                = []
 default["percona"]["server"]["expire_logs_days"]                = 10
 default["percona"]["server"]["max_binlog_size"]                 = "100M"
 default["percona"]["server"]["binlog_cache_size"]               = "1M"
@@ -152,7 +153,8 @@ default["percona"]["server"]["replication"]["testuser"]         = "test_user"
 #   default["percona"]["server"]["replication"]["password"]       = encrypted_mysql_passwords['replication'] || secure_password
 # end
 default["percona"]["server"]["replication"]["port"]             = 3306
-default["percona"]["server"]["replication"]["ignore_db"]        = ""
+default["percona"]["server"]["replication"]["do_db"]            = []
+default["percona"]["server"]["replication"]["ignore_db"]        = []
 
 # XtraBackup Settings
 default["percona"]["backup"]["configure"]                       = false
