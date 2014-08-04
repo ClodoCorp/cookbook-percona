@@ -5,7 +5,7 @@ isReinstalled = false
 # install packages
 case node["platform_family"]
 when "debian"
-  package "percona-server-server-5.6" do
+  package "percona-server-server" do
     action :install
     options "--force-yes"
     notifies :stop, "service[mysql]", :immediately
