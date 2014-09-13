@@ -23,6 +23,7 @@
 default["percona"]["auto_restart"] = true
 default["percona"]["server"]["replication"]["force_start"] = true
 default["percona"]["server"]["configure"] = true
+default["percona"]["server"]["version"] = "5.6"
 
 case node["platform_family"]
 when "debian"
