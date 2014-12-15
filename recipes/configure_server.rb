@@ -29,7 +29,7 @@ end
 # clean up mysql after initial run
 bash "cleanup_mysql" do
   code <<-EOC
-    rm -rf #{datadir}/*
+    rm -rf #{datadir}/ib_logfile*
   EOC
   action :nothing
   notifies :stop, "service[mysql]", :immediately
