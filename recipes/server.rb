@@ -2,9 +2,17 @@ include_recipe "percona::package_repo"
 
 isReinstalled = false
 
+
 # install packages
 case node["platform_family"]
 when "debian"
+  ruby_block "remove old logfile before install" do
+    block do
+      notifies :run, resources(:bash => "cleanup_mysql"), :immediately
+    end
+    not_if "dpkg --get-selections | grep percona-server-server-#{node['percona']['server']['version']}"
+    action :run
+  end
   package "percona-server-server-#{node["percona"]["server"]["version"]}" do
     action :install
     options "--force-yes"
@@ -31,6 +39,12 @@ include_recipe "percona::configure_server"
 
 if node["percona"]["server"]["configure"] 
   # access grants
+  ruby_block "start mysql service for configure" do
+    block do
+      notifies :start, resources(:service => "mysql"), :immediately if isReinstalled
+    end
+    action :run
+  end
   include_recipe "percona::access_grants"
 
   include_recipe "percona::replication"
@@ -43,11 +57,16 @@ ruby_block 'set_isReinstalled' do
   action :nothing
 end
 
-r = ruby_block 'stop_mysql_after_configure' do
+ruby_block "stop mysql by ending install" do
   block do
+    notifies :stop, resources(:service => "mysql"), :immediately if isReinstalled
   end
-  notifies :stop, "service[mysql]", :immediately
-  action :nothing
+  action :run
 end
 
-r.run_action(:create) if isReinstalled
+ruby_block "remove old logfile after install" do
+  block do
+    notifies :run, resources(:bash => "cleanup_mysql"), :immediately if isReinstalled
+  end
+  action :run
+end

@@ -29,10 +29,11 @@ end
 # clean up mysql after initial run
 bash "cleanup_mysql" do
   code <<-EOC
-    rm -rf #{datadir}/ib_logfile*
+     mkdir -p #{datadir}/backup
+     mv -bf #{datadir}/ib_logfile* #{datadir}/backup/
+     exit 0
   EOC
   action :nothing
-  notifies :stop, "service[mysql]", :immediately
 end
 
 # this is where we dump sql templates for replication, etc.
