@@ -74,6 +74,7 @@ default["percona"]["server"]["skip_external_locking"]           = true
 default["percona"]["server"]["net_read_timeout"]                = 120
 default["percona"]["server"]["old_passwords"]                   = 1
 default["percona"]["server"]["bind_address"]                    = "127.0.0.1"
+default["percona"]["server"]["event_scheduler"]                 = false
 # unless node.has_key?("percona") && node["percona"].has_key?("server") && node["percona"]["server"].has_key?("debian_password")
 #   default["percona"]["server"]["debian_password"]               = encrypted_system_passwords[default["percona"]["server"]["debian_password"]] || secure_password
 # end
