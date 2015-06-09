@@ -19,7 +19,7 @@ when "debian"
 
   # Pin this repo as to avoid conflicts with others
   apt_preference "00percona" do
-    package_name "*"
+    glob "*"
     pin " release o=Percona Development Team"
     pin_priority "1001"
   end
