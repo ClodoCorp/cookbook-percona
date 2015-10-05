@@ -12,7 +12,7 @@ when "debian"
     distribution node["lsb"]["codename"]
     components ["main"]
     keyserver node["percona"]["keyserver"]
-    key "1C4CBDCDCD2EFD2A"
+    key node["percona"]["key"]
     action :add
     notifies :run, "execute[apt-get update]", :immediately
   end

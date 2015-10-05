@@ -41,6 +41,7 @@ end
 # Cookbook Settings
 default["percona"]["main_config_file"]                          = "/etc/my.cnf"
 default["percona"]["keyserver"]                                 = "keys.gnupg.net"
+default["percona"]["key"]                                 = "1C4CBDCDCD2EFD2A"
 default["percona"]["encrypted_data_bag"]                        = node["percona"]["encrypted_data_bag"] || "passwords"
 
 # optionally pull default passwords from the encrypted data bags
