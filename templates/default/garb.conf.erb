@@ -12,7 +12,9 @@ GALERA_GROUP="<%= node['percona']['garb']['group'] %>"
 #
 # # Optional Galera internal options string (e.g. SSL settings)
 # # see http://galeracluster.com/documentation-webpages/galeraparameters.html
+<% if node['percona']['garb']['options'] %>
 GALERA_OPTIONS="<%= node['percona']['garb']['options'] %>"
+<% end %>
 #
 # # Log file for garbd. Optional, by default logs to syslog
 # # Deprecated for CentOS7, use journalctl to query the log for garbd
