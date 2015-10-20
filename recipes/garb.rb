@@ -1,6 +1,7 @@
 service "garbd" do
   supports :restart => true
   action :enable
+  ignore_failure true
 end
 
 template node['percona']['garb']['conf_file'] do
