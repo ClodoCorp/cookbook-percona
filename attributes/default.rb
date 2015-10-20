@@ -175,5 +175,5 @@ default["percona"]["config"]["mysqld"]["collation_server"] = "utf8_general_ci"
 default["percona"]["config"]["client"]["port"] = node["percona"]["config"]["mysqld"]["port"]
 default["percona"]["config"]["client"]["socket"] = node["percona"]["config"]["mysqld"]["socket"]
 default["percona"]["config"]["mysqld_safe"]["socket"] = node["percona"]["config"]["mysqld"]["socket"]
-default["percona"]["config"]["mysqld_safe"]["nice"] => "0"
-default["percona"]["config"]["mysqld_safe"]["open-files-limit"] => "16384"
+default["percona"]["config"]["mysqld_safe"]["nice"] = "0"
+default["percona"]["config"]["mysqld_safe"]["open-files-limit"] = "16384"
