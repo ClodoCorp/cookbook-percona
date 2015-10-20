@@ -24,7 +24,6 @@ default["percona"]["auto_restart"] = true
 default["percona"]["server"]["replication"]["force_start"] = true
 default["percona"]["server"]["configure"] = true
 default["percona"]["server"]["version"] = "5.6"
-
 case node["platform_family"]
 when "debian"
   default["percona"]["server"]["socket"]                        = "/var/run/mysqld/mysqld.sock"
@@ -166,13 +165,15 @@ default["percona"]["backup"]["username"]                        = "backup"
 #   default["percona"]["backup"]["password"]                      = encrypted_mysql_passwords['backup'] || secure_password
 # end
 
-# XtraDB Cluster Settings
-default["percona"]["cluster"]["binlog_format"]                  = "ROW"
-default["percona"]["cluster"]["wsrep_provider"]                 = "/usr/lib64/libgalera_smm.so"
-default["percona"]["cluster"]["wsrep_cluster_address"]          = ""
-default["percona"]["cluster"]["wsrep_slave_threads"]            = 2
-default["percona"]["cluster"]["wsrep_cluster_name"]             = ""
-default["percona"]["cluster"]["wsrep_sst_method"]               = "rsync"
-default["percona"]["cluster"]["wsrep_node_name"]                = ""
-default["percona"]["cluster"]["innodb_locks_unsafe_for_binlog"] = 1
-default["percona"]["cluster"]["innodb_autoinc_lock_mode"]       = 2
+default["percona"]["config"]["mysqld"]["user"] = "mysql"
+default["percona"]["config"]["mysqld"]["pid-file"] = "/var/run/mysqld/mysqld.pid"
+default["percona"]["config"]["mysqld"]["socket"] = "/var/run/mysqld/mysqld.sock"
+default["percona"]["config"]["mysqld"]["port"] = "3306"
+default["percona"]["config"]["mysqld"]["datadir"] = "/var/lib/mysql"
+default["percona"]["config"]["mysqld"]["character_set_server"] = "utf8"
+default["percona"]["config"]["mysqld"]["collation_server"] = "utf8_general_ci"
+default["percona"]["config"]["client"]["port"] = node["percona"]["config"]["mysqld"]["port"]
+default["percona"]["config"]["client"]["socket"] = node["percona"]["config"]["mysqld"]["socket"]
+default["percona"]["config"]["mysqld_safe"]["socket"] = node["percona"]["config"]["mysqld"]["socket"]
+default["percona"]["config"]["mysqld_safe"]["nice"] => "0"
+default["percona"]["config"]["mysqld_safe"]["open-files-limit"] => "16384"
