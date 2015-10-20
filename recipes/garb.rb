@@ -1,6 +1,6 @@
 service "garbd" do
   supports :restart => true
-  action :enable
+  action :nothing
   ignore_failure true
 end
 
