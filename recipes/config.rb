@@ -12,7 +12,7 @@ template node["percona"]["main_config_file"] do
   variables(
     :config => node["percona"]["config"]
   )
-  notify :restart, "service[mysql]", :delayed
+  notifies :restart, "service[mysql]", :delayed
 end
 
 template "/etc/mysql/debian.cnf" do
