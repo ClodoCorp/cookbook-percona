@@ -4,7 +4,7 @@ service "mysql" do
     action :disable
 end
 
-template percona["main_config_file"] do
+template node["percona"]["main_config_file"] do
   source "my.cnf.erb"
   owner "root"
   group "root"
