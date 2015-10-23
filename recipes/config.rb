@@ -32,7 +32,7 @@ template node["percona"]["main_config_file"] do
   )
   notifies :stop, "service[mysql]", :immediately
   notifies :run, "ruby_block[Rename logfile]", :immediately
-  notifies :start, "service[mysql]", :delayed
+  notifies :start, "service[mysql]", :immediately
 end
 
 template "/etc/mysql/debian.cnf" do
