@@ -1,7 +1,25 @@
+datadir = node["percona"]["config"]["mysqld"]["datadir"]
 
 service "mysql" do
     supports :restart => true
     action :disable
+end
+
+directory "#{datadir}/log_backup" do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+  recursive :true
+end
+
+ruby_block "Rename logfile" do
+  block do
+    ::File.rename("#{datadir}/ib_logfile0","#{datadir}/log_backup/ib_logfile0")
+    ::File.rename("#{datadir}/ib_logfile1","#{datadir}/log_backup/ib_logfile1")
+  end
+  action :nothing
+  not_if { node["percona"]["config"]["mysqld"]["innodb_log_block_size"] == ::File.open("/var/lib/mysql/ib_logfile0", "rb") { |f| f.read[66..67] }.unpack('n')[0] }
 end
 
 template node["percona"]["main_config_file"] do
@@ -12,7 +30,9 @@ template node["percona"]["main_config_file"] do
   variables(
     :config => node["percona"]["config"]
   )
-  notifies :restart, "service[mysql]", :delayed
+  notifies :stop, "service[mysql]", :immediately
+  notifies :run, "ruby_block[Rename logfile]", :immediately
+  notifies :start, "service[mysql]", :delayed
 end
 
 template "/etc/mysql/debian.cnf" do
@@ -23,7 +43,6 @@ template "/etc/mysql/debian.cnf" do
   owner "root"
   group "root"
   mode 0640
-  notifies :restart, "service[mysql]", :delayed
   only_if { node["platform_family"] == "debian" }
 end
 
