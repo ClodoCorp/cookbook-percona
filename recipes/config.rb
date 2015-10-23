@@ -10,7 +10,7 @@ directory "#{datadir}/log_backup" do
   group 'root'
   mode '0755'
   action :create
-  recursive :true
+  recursive true
 end
 
 ruby_block "Rename logfile" do
