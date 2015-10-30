@@ -12,4 +12,8 @@ template node['percona']['garb']['conf_file'] do
   notifies :restart, "service[garbd]", :delayed
 end
 
-
+if node['percona']['garb']['log_file']
+  file node['percona']['garb']['log_file'] do
+    owner 'nobody'
+  end
+end
