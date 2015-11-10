@@ -46,4 +46,4 @@ template "/etc/mysql/debian.cnf" do
   only_if { node["platform_family"] == "debian" }
 end
 
-include_recipe "percona::access_grants"
+include_recipe "percona::access_grants" if node["percona"]["server"]["access_grants"]

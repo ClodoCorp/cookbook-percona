@@ -165,6 +165,7 @@ default["percona"]["backup"]["username"]                        = "backup"
 #   default["percona"]["backup"]["password"]                      = encrypted_mysql_passwords['backup'] || secure_password
 # end
 
+default["percona"]["server"]["access_grants"] = true
 default["percona"]["config"]["mysqld"]["user"] = "mysql"
 default["percona"]["config"]["mysqld"]["pid-file"] = "/var/run/mysqld/mysqld.pid"
 default["percona"]["config"]["mysqld"]["socket"] = "/var/run/mysqld/mysqld.sock"
