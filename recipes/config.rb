@@ -1,17 +1,38 @@
 datadir = node["percona"]["config"]["mysqld"]["datadir"]
 
 service "mysql" do
-    supports :restart => true
-    action :disable
+  action :enable
 end
 
-directory "#{datadir}/log_backup" do
-  owner 'root'
-  group 'root'
+directory "#{datadir}" do
+  owner  node["percona"]["config"]["mysqld"]["user"]
+  group  node["percona"]["config"]["mysqld"]["user"]
   mode '0755'
   action :create
   recursive true
 end
+
+directory "#{datadir}/log_backup" do
+  owner  node["percona"]["config"]["mysqld"]["user"]
+  group  node["percona"]["config"]["mysqld"]["user"]
+  mode '0755'
+  action :create
+end
+
+execute "Database Initial" do
+  command "mysql_install_db --keep-my-cnf --defaults-file=\"#{node["percona"]["main_config_file"]}\""
+  action :run
+  notifies :start, "service[mysql]", :immediately
+  notifies :run, "execute[Set root password]", :immediately
+  not_if { ::File.exists?("#{datadir}/mysql/user.frm") }
+end
+
+execute "Set root password" do
+  command "/usr/bin/mysqladmin -u root -h localhost password \'#{node["percona"]["server"]["root_password"]}\' --password=\'\'"
+  action :nothing
+end
+
+include_recipe "percona::access_grants" if node["percona"]["server"]["access_grants"]
 
 ruby_block "Rename logfile" do
   block do
@@ -25,8 +46,8 @@ end
 template node["percona"]["main_config_file"] do
   source "my.cnf.erb"
   owner "root"
-  group "root"
-  mode "0644"
+  group node["percona"]["config"]["mysqld"]["user"]
+  mode "0640"
   variables(
     :config => node["percona"]["config"]
   )
@@ -46,4 +67,13 @@ template "/etc/mysql/debian.cnf" do
   only_if { node["platform_family"] == "debian" }
 end
 
-include_recipe "percona::access_grants" if node["percona"]["server"]["access_grants"]
+template "/root/.my.cnf" do
+  source "my.cnf.erb"
+  owner "root"
+  group "root"
+  mode 0640
+  variables(
+    :config => { "client" => { "user" => "root", "password" => node["percona"]["server"]["root_password"] } }
+  )
+end
+
