@@ -75,6 +75,6 @@ template "/root/.my.cnf" do
   variables(
     :config => { "client" => { "user" => "root", "password" => node["percona"]["server"]["root_password"] } }
   )
-  only_if node["percona"]["server"]["access_grants"]
+  only_if { node["percona"]["server"]["access_grants"] }
 end
 
