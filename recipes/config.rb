@@ -2,6 +2,7 @@ datadir = node["percona"]["config"]["mysqld"]["datadir"]
 
 service "mysql" do
   action :enable
+  supports :reload => true
 end
 
 directory "#{datadir}" do
@@ -40,6 +41,7 @@ ruby_block "Rename logfile" do
     ::File.rename("#{datadir}/ib_logfile1","#{datadir}/log_backup/ib_logfile1")
   end
   action :nothing
+  only_if { ::File.exists?("/var/lib/mysql/ib_logfile0") }
   not_if { node["percona"]["config"]["mysqld"]["innodb_log_block_size"] == ::File.open("/var/lib/mysql/ib_logfile0", "rb") { |f| f.read[66..67] }.unpack('n')[0] }
 end
 
@@ -51,9 +53,9 @@ template node["percona"]["main_config_file"] do
   variables(
     :config => node["percona"]["config"]
   )
-  notifies :stop, "service[mysql]", :immediately
   notifies :run, "ruby_block[Rename logfile]", :immediately
   notifies :start, "service[mysql]", :immediately
+  notifies :reload, "service[mysql]", :immediately
 end
 
 template "/etc/mysql/debian.cnf" do
