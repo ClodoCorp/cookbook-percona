@@ -33,8 +33,6 @@ execute "Set root password" do
   action :nothing
 end
 
-include_recipe "percona::access_grants" if node["percona"]["server"]["access_grants"]
-
 ruby_block "Rename logfile" do
   block do
     ::File.rename("#{datadir}/ib_logfile0","#{datadir}/log_backup/ib_logfile0")
@@ -80,3 +78,4 @@ template "/root/.my.cnf" do
   only_if { node["percona"]["server"]["access_grants"] }
 end
 
+include_recipe "percona::access_grants" if node["percona"]["server"]["access_grants"]
