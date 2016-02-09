@@ -5,7 +5,7 @@ service "mysql" do
   supports :reload => true
 end
 
-directory "#{datadir}" do
+directory datadir do
   owner  node["percona"]["config"]["mysqld"]["user"]
   group  node["percona"]["config"]["mysqld"]["user"]
   mode '0755'
