@@ -1,0 +1,6 @@
+Style/FileName:
+  Enabled: false
+AlignParameters:
+  Enabled: false
+LineLength:
+  Max: 160
