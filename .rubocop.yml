@@ -3,4 +3,4 @@ Style/FileName:
 AlignParameters:
   Enabled: false
 LineLength:
-  Max: 160
+  Max: 200

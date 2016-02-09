@@ -1,24 +1,24 @@
-require "ipaddr"
+require 'ipaddr'
 
 module Percona
+  # Module IPScope
   module IPScope
-    extend self
-
-    PRIVATE_RANGES = [IPAddr.new("10.0.0.0/8"), IPAddr.new("192.168.0.0/16")]
-    LOOPBACK_RANGE = IPAddr.new("0.0.0.0/8")
+    PRIVATE_RANGES = [IPAddr.new('10.0.0.0/8'), IPAddr.new('192.168.0.0/16')].freeze
+    LOOPBACK_RANGE = IPAddr.new('0.0.0.0/8')
 
     def for(ipaddress)
       addr = IPAddr.new(ipaddress)
 
       return :private if PRIVATE_RANGES.any? { |range| range.include? addr }
       return :loopback if LOOPBACK_RANGE.include? addr
-      return :public
+      :public
     end
+
+    module_function :for
   end
 
+  # Module ConfigHelper
   module ConfigHelper
-    extend self
-
     def bind_to(node, interface)
       case interface.to_sym
       when :public_ip
@@ -51,7 +51,7 @@ module Percona
     end
 
     def find_ip(node, scope)
-      node['network']['interfaces'].each do |ifce, attrs|
+      node['network']['interfaces'].each do |_ifce, attrs|
         next unless attrs['addresses']
         attrs['addresses'].each do |addr, data|
           next unless data['family'] == 'inet'
@@ -63,9 +63,10 @@ module Percona
     def find_interface_ip(node, interface)
       interfaces = node['network']['interfaces']
       return unless interfaces[interface]
-      addr = interfaces[interface]['addresses'].find { |ip, attrs| attrs['family'] == 'inet' }
+      addr = interfaces[interface]['addresses'].find { |_ip, attrs| attrs['family'] == 'inet' }
       addr && addr[0]
     end
+
+    module_function :bind_to, :find_public_ip, :find_private_ip, :find_loopback_ip, :find_interface_ip, :find_ip
   end
 end
-
