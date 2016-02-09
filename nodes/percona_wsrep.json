@@ -1,0 +1,9 @@
+{
+  "valuefromdna": "default",
+  "run_list": [
+    "role[server]",
+    "recipe[repos]",
+    "recipe[platform_packages]",
+    "recipe[percona::config]"
+  ]
+}

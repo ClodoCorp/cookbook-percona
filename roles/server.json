@@ -1,0 +1,131 @@
+{
+  "name": "server",
+  "description": "Galera Multimaster DataBase Cluster",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+    "repos": [
+      "debian",
+      {
+        "type": "apt",
+        "name": "percona",
+        "uri": "http://repo.percona.com/apt",
+        "key": "http://ci.clodo.ru/mysql-dev@percona.com.key",
+        "distribution": "jessie",
+        "components": [
+          "main"
+        ],
+        "pin_priority": "1001"
+      }
+    ],
+    "platform_packages": {
+      "pkgs": [
+        {
+          "name": "percona-xtradb-cluster-56"
+        }
+      ]
+    },
+    "percona": {
+      "main_config_file": "/etc/mysql/my.cnf",
+      "config": {
+        "mysqld": {
+          "tmpdir": "/tmp",
+          "log-error": "/var/log/mysql/error.log",
+          "wsrep_provider": "/usr/lib/galera3/libgalera_smm.so",
+          "wsrep_cluster_address": "gcomm://cc00,cc01,db00,db01,test.clodo.ru",
+          "wsrep_sst_method": "xtrabackup-v2",
+          "wsrep_sst_auth": "sstuser:sstuserpassword",
+          "wsrep_max_ws_size": "4294901759",
+          "skip-external-locking": "",
+          "net_read_timeout": "30",
+          "event_scheduler": "ON",
+          "bind-address": "::",
+          "key_buffer_size": "128M",
+          "max_allowed_packet": "64M",
+          "group_concat_max_len": "4096",
+          "query_alloc_block_size": "16K",
+          "tmp_table_size": "128M",
+          "default_storage_engine": "InnoDB",
+          "max_heap_table_size": "128M",
+          "sort_buffer_size": "8M",
+          "join_buffer_size": "8M",
+          "thread_cache_size": "200",
+          "myisam-recover-options": "BACKUP",
+          "max_connections": "1500",
+          "max_connect_errors": "9999999",
+          "table_open_cache": "8192",
+          "query_cache_size": "64M",
+          "query_cache_limit": "4M",
+          "sync_binlog": "0",
+          "slow_query_log": "1",
+          "slow_query_log_file": "/var/log/mysql/mysql-slow.log",
+          "long_query_time": "2",
+          "expire_logs_days": "3",
+          "log-bin-trust-function-creators": "1",
+          "binlog_cache_size": "1M",
+          "log-bin": "/var/lib/mysql/mysql-bin.log",
+          "bulk_insert_buffer_size": "0",
+          "myisam_sort_buffer_size": "128M",
+          "innodb_buffer_pool_size": "3G",
+          "innodb_file_per_table": "ON",
+          "innodb_file_format": "Barracuda",
+          "innodb_thread_concurrency": "16",
+          "innodb_flush_log_at_trx_commit": "2",
+          "innodb_log_buffer_size": "64M",
+          "innodb_log_file_size": "512M",
+          "innodb_flush_method": "O_DIRECT",
+          "innodb_lock_wait_timeout": "50",
+          "innodb_commit_concurrency": "0",
+          "innodb_open_files": "1024",
+          "query_cache_type": "1",
+          "binlog_stmt_cache_size": "1M",
+          "innodb_write_io_threads": "8",
+          "innodb_read_io_threads": "8",
+          "expand_fast_index_creation": "ON",
+          "innodb_doublewrite": "OFF",
+          "innodb_log_block_size": "4096",
+          "table_definition_cache": "8192",
+          "skip-name-resolve": "ON",
+          "binlog-format": "ROW",
+          "innodb_kill_idle_transaction": "600",
+          "innodb_rollback_on_timeout": "ON",
+          "default_time_zone": "+03:00"
+        }
+      },
+      "server": {
+        "root_password": "rootpassword",
+        "debian_password": "1GINQSxcv4qsFgZ6",
+        "databases": {
+          "clodo": {
+            "charset": "utf8",
+            "collate": "utf8_unicode_ci"
+          }
+        },
+        "users": {
+          "root": {
+            "host": "localhost",
+            "password": "rootpassword",
+            "grants": [
+              "SUPER ON *.*",
+              "ALL PRIVILEGES ON *.*"
+            ]
+          },
+          "sstuser": {
+            "host": "localhost",
+            "password": "sstuserpassword",
+            "grants": [
+              "RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.*"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "chef_type": "role",
+  "run_list": [
+
+  ],
+  "env_run_lists": {
+  }
+}

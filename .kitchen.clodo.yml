@@ -1,0 +1,24 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  #name: chef_solo
+  name: chef_extended_attributes
+  merge_attributes: false
+  role_path: 'roles'
+  nodes_path: 'nodes'
+
+platforms:
+  -
+    name: debian-8-linux-3.19
+    driver:
+      provider: libvirt
+      box: debian-8-linux-3.19
+      box_url: http://clodo:build@jenkins.clodo.ru/job/packer-vagrant-debian_8-linux-3_19/lastSuccessfulBuild/artifact/images/debian-8-linux-3.19.box
+      customize:
+        memory: 1024
+
+suites:
+  -
+    name: percona_wsrep
